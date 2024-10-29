@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: MIT  
+   
+pragma solidity ^0.8.0; 
+ 
+contract Car{ 
+    mapping (address => uint) public Info; 
+ 
+    struct CarInfo{ 
+        address owner; 
+        string username; 
+        string model; 
+        uint balance; 
+        string colour; 
+    } 
+ 
+    CarInfo public carinfo; 
+ 
+    constructor(string memory _username, string memory _model, string memory _colour){ 
+        carinfo.owner = msg.sender; 
+        carinfo.username = _username; 
+        carinfo.colour = _colour; 
+    } 
+ 
+    function getBalance() public payable{ 
+        carinfo.balance = msg.value; 
+    } 
+ 
+    function chooseSpeed(address EnterAddress, uint EnterSpeed) public{ 
+        Info[EnterAddress] = EnterSpeed; 
+    } 
+ 
+    function changeCarParameters(string memory _model, string memory _colour) public payable returns(string memory, string memory){  
+        require(carinfo.balance >= 10 ether, "Error"); 
+        if (carinfo.balance > 15 ether) {  
+            carinfo.balance -= 2 ether;  
+            carinfo.colour = _colour;  
+        } else if (carinfo.balance > 10 ether) {  
+            carinfo.balance -= 3 ether;  
+            carinfo.model = _model;  
+    }  
+        return (carinfo.model, carinfo.colour);  
+} 
+ 
+ 
+    function getChangedCarInfo() public view returns (address, string memory, string memory, uint, string memory) { 
+        return (carinfo.owner, carinfo.username, carinfo.model, carinfo.balance, carinfo.colour); 
+    } 
+}
